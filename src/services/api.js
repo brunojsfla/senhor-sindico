@@ -22,8 +22,8 @@ const request = async (method, endpoint, params, token = null) => {
 
   let headers = {'Content-Type': 'application/json'};
 
-  if(token) {
-      headers.Authorization = `Bearer ${token}`;
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
   }
 
   let req = await fetch(fullUrl, {method, headers, body});
@@ -47,4 +47,24 @@ export default {
     let json = await request('post', '/auth/login', {cpf, password});
     return json;
   },
+
+  logout: async () => {
+    let token = await AsyncStorage.getItem('token');
+    let json = await request('post', '/auth/logout', {}, token);
+    await AsyncStorage.removeItem('token');
+    return json;
+  },
+  
+  register: async (name, email, cpf, password, password_confirm) => {
+    let json = await request('post', '/auth/register', {
+      name,
+      email,
+      cpf,
+      password,
+      password_confirm
+    });
+    
+    return json;
+
+  }
 };
